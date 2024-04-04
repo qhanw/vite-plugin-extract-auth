@@ -1,3 +1,4 @@
+import { join } from 'node:path';
 import { exit } from './util/helper';
 
 import { logError, detectUnique, cleanFields } from './util/helper';
@@ -9,14 +10,15 @@ import type { AuthTreeNode, Options } from './typings';
 /** 生成权限树 */
 export default function (opts: Options): AuthTreeNode[] | void {
   // 如果未配置权限路由数据则直接返回为空
-  if (!opts.routes?.length) return [];
+  // if (!opts.routes?.length) return [];
   try {
-    const options: Required<Options> = {
+    const options: Options = {
       /** 默认参数 */
       apiPrefix: '', // 接口前缀
       routeFilterRules: ['404', '403', '500', '*'],
       /** 业务传入 */
       ...opts,
+      entry: join(opts.cwd, 'config/base'),
     };
 
     const data = cleanFields([...transRoutes(options)]);

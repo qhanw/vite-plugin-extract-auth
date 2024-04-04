@@ -28,7 +28,7 @@ export default function extractAuth(options: ExtractAuthOptions): Plugin {
         // authorization.ts
         fs.writeFile(
           authorizationFile,
-          `export const APP_KEY = "${options.appKey}";\n\nexport default ${JSON.stringify(source, null, 2)};`,
+          `export const APP_KEY = "${options?.appKey}";\n\nexport default ${JSON.stringify(source, null, 2)};`,
           'utf-8',
           () => {},
         );

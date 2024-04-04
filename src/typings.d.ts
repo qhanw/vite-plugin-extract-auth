@@ -39,12 +39,12 @@ export type ExtractAuthOptions = {
   /**
    * 应用key
    */
-  appKey: string;
+  appKey?: string;
   /**
-   * 路由资源数据
-   * @default []
+   * 路由资源文件地址，相对于项目根目录
+   * @default config/base
    */
-  routes: AuthRoute[];
+  entry?: string;
   /**
    * 过滤未配置权限页面
    * @default ['exception', 'error', '404', '403', '500', 'DS_Store']

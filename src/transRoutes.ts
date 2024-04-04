@@ -1,5 +1,6 @@
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-
+import esbuild from 'esbuild';
 import trans from './trans';
 
 import {
@@ -31,6 +32,15 @@ const ignoreAuth = (route: AuthRoute, cfg: Options) => {
 };
 
 export default function transRoutes(cfg: Options) {
+  const filePath = cfg.entry + '.ts';
+
+  if (!existsSync(filePath)) return [];
+
+  const text = readFileSync(filePath, 'utf8');
+  const { code } = esbuild.transformSync(text, { loader: 'ts', minify: true });
+  const jsonText = /\[\{.*\}\];/.exec(code)?.[0];
+  const json = new Function('return ' + jsonText)();
+
   const parse = (
     routes: AuthRoute[],
     { pName, pPath }: { pName?: string; pPath?: string } = {},
@@ -122,5 +132,7 @@ export default function transRoutes(cfg: Options) {
       return prev;
     }, [] as AuthTreeNode[]);
   };
-  return parse(cfg.routes);
+
+  // return [];
+  return parse(json);
 }

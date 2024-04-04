@@ -70,6 +70,7 @@
     "bumpp": "^9.4.0",
     "conventional-changelog-cli": "^4.1.0",
     "cross-env": "^7.0.3",
+    "esbuild": "^0.20.2",
     "eslint": "^8.57.0",
     "esno": "^4.7.0",
     "lint-staged": "^15.2.2",
@@ -82,5 +83,8 @@
   },
   "simple-git-hooks": {
     "pre-commit": "lint-staged"
+  },
+  "peerDependencies": {
+    "esbuild": "^0.20.2"
   }
 }
