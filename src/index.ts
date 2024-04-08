@@ -6,13 +6,9 @@ import bootstrap from './bootstrap';
 
 import { ExtractAuthOptions } from './typings';
 
-export default function extractAuth(options: ExtractAuthOptions): Plugin {
+export default function extractAuth(options?: ExtractAuthOptions): Plugin {
   return {
     name: 'vite-plugin-extract-auth',
-
-    options: (options) => {
-      console.log('options:', options);
-    },
 
     configureServer: (service) => {
       // const envDir = service.config.envDir; // 项目根目录
