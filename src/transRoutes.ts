@@ -31,6 +31,25 @@ const ignoreAuth = (route: AuthRoute, cfg: Options) => {
   );
 };
 
+// 合并权限配置
+const combinePaths = (
+  data: AuthTreeNode[] | undefined,
+  key: string,
+  path: string,
+) => {
+  if (!data?.length) return { path, json: undefined };
+
+  const idx = data.findIndex((c) => c.key === key && c.type === 'route');
+
+  if (idx >= 0) {
+    return {
+      path: [path, data[idx].path].join(','),
+      json: [...data.slice(0, idx), ...data.slice(idx + 1)],
+    };
+  }
+  return { path, json: data };
+};
+
 export default function transRoutes(cfg: Options) {
   const filePath = cfg.entry + '.ts';
 
@@ -60,7 +79,7 @@ export default function transRoutes(cfg: Options) {
       // 以点分隔的全路径文件名及完整路由路径
       const full = {
         name: pName ? [pName, name].join('.') : name,
-        path: pPath && !path.startsWith('/') ? [pPath, path].join('/') : path,
+        path: pPath && path.startsWith('/') ? path : [pPath, path].join('/'),
       };
 
       // 忽略path=/第一级菜单
@@ -111,14 +130,17 @@ export default function transRoutes(cfg: Options) {
           }
         }
 
+        // 将配置文件中的权限API配置与路由页面进行合并
+        const { path: p, json } = combinePaths(childAuth, key, path);
+
         const authTree: AuthTreeNode = {
           name,
           key,
           type: 'route',
-          path,
+          path: p,
           hidden: curr.hideInMenu,
           icon: curr.icon,
-          children: childAuth?.length ? childAuth : undefined,
+          children: json,
         };
 
         prev.push(authTree);
